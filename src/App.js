@@ -25,17 +25,16 @@ function App() {
 
   function sortByPopularity(contacts) {
     let copyArray = [...contacts];
-    let sortedArray = copyArray.sort(function (a, b) {
-      return a.popularity - b.popularity;
-    });
+    let sortedArray = copyArray.sort((a, b) => b.popularity - a.popularity);
     setContacts(sortedArray);
   }
 
   function sortByName(contacts) {
     let copyArray = [...contacts];
-    let sortedArray = copyArray.sort(function (a, b) {
-      return a.name - b.name;
-    });
+    let sortedArray = copyArray.sort((a, b) =>
+      a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+    );
+
     setContacts(sortedArray);
   }
 
