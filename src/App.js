@@ -1,7 +1,54 @@
 import logo from "./logo.svg";
+import { useState } from "react";
 import "./App.css";
 import contactsData from "./contacts.json";
+
 function App() {
+  const [contacts, setContacts] = useState(contactsData.slice(0, 5));
+  const [remainingContacts, setRemainingContacts] = useState(
+    contactsData.slice(5, contactsData.length)
+  );
+
+  function addRandomContact(remainingContacts) {
+    //get random number and remove based on index
+    let copyArray = [...remainingContacts];
+    let randomIndex = Math.floor(Math.random() * copyArray.length);
+
+    //array of what we removed
+    let randomItem = copyArray.splice(randomIndex, 1)[0];
+
+    let outPutArray = [...contacts, randomItem];
+
+    setContacts(outPutArray);
+    setRemainingContacts(copyArray);
+  }
+
+  function sortByPopularity(contacts) {
+    let copyArray = [...contacts];
+    let sortedArray = copyArray.sort(function (a, b) {
+      return a.popularity - b.popularity;
+    });
+    setContacts(sortedArray);
+  }
+
+  function sortByName(contacts) {
+    let copyArray = [...contacts];
+    let sortedArray = copyArray.sort(function (a, b) {
+      return a.name - b.name;
+    });
+    setContacts(sortedArray);
+  }
+
+  function deleteItem(itemid) {
+    let copyArray = [...contacts];
+
+    const filteredItems = copyArray.filter(function (item) {
+      return item.id !== itemid;
+    });
+
+    setContacts(filteredItems);
+  }
+
   return (
     <div className="App">
       <h2>Iron Contacts</h2>
@@ -10,9 +57,11 @@ function App() {
           <th>Picture</th>
           <th>Name</th>
           <th>Popularity</th>
+          <th>Won an Oscar</th>
+          <th>Won an Emmy</th>
+          <th>Action</th>
         </tr>
-        {contactsData.map((contact) => {
-          console.log(contact);
+        {contacts.map((contact) => {
           return (
             <tbody>
               <tr key={contact.id}>
@@ -23,11 +72,28 @@ function App() {
                   <h4>{contact.name}</h4>
                 </td>
                 <td>{contact.popularity}</td>
+                <td>{contact.wonOscar && "🏆"}</td>
+                <td>{contact.wonEmmy && "🏆"}</td>
+                <td>
+                  <button
+                    onClick={() => deleteItem(contact.id)}
+                    className="btn-delete"
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             </tbody>
           );
         })}
       </table>
+      <button onClick={() => addRandomContact(contactsData)}>
+        Add Random Contact
+      </button>
+      <button onClick={() => sortByPopularity(contactsData)}>
+        Sort by popularity
+      </button>
+      <button onClick={() => sortByName(contactsData)}>Sort by name</button>
     </div>
   );
 }
